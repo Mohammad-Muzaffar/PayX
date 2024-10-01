@@ -1,11 +1,12 @@
-import Test from "../components/Test";
-import styles from "./page.module.css";
+"use client"
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Appbar } from "@repo/ui/appbar";
 
-export default function Home() {
+export default function Page(): JSX.Element {
+  const session = useSession();
   return (
-    <div>
-      <h1 className="text-slate-400 font-extrabold text-2xl">HI THERE</h1>
-      <Test />
-    </div>
+   <div>
+      <Appbar onSignin={signIn} onSignout={signOut} user={session.data?.user} />
+   </div>
   );
 }

@@ -1,8 +1,10 @@
+"use client";
 
-import styles from "./page.module.css";
+import { useBalance } from "@repo/store/useBalance";
 
-export default function Home() {
-  return (
-    <h1 className="text-rose-600 text-2xl">Hi from merchant</h1>
-  );
+export default function() {
+  const balance = useBalance();
+  return <div>
+    hi there {balance}
+  </div>
 }
