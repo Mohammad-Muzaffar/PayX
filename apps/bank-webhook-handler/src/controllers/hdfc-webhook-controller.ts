@@ -44,7 +44,7 @@ export const hdfcWebhookController = async (req: Request, res: Response) => {
             message: "Captured the ammount!"
         })
 
-    } catch(error) {
+    } catch(error: any) {
         if(error instanceof Prisma.PrismaClientKnownRequestError){
             res.status(411).json({
                 error: error.message
