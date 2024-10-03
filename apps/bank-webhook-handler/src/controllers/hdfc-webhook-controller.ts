@@ -11,21 +11,30 @@ interface paymentInfo {
 export const hdfcWebhookController = async (req: Request, res: Response) => {
     const paymentInformation: paymentInfo = {
         token: req.body.token,
-        userId: req.body.user_identifier,
-        amount: req.body.amount
+        userId: req.body.userId,
+        amount: req.body.ammount
+    }
+    const userId = parseInt(paymentInformation.userId);
+    const ammount = parseInt(paymentInformation.amount);
+    
+    if (isNaN(userId) || isNaN(ammount)) {
+        res.status(400).json({
+            message: "Invalid userId or amount. They must be valid numbers."
+        });
+        return;
     }
 
     try {
         await db.$connect();
         // Starting a transaction:
         const transaction = await db.$transaction([
-            db.balance.update({
+            db.balance.updateMany({
                 where: {
-                    userId: Number(paymentInformation.userId)
+                    userId: userId
                 },
                 data: {
                     amount: {
-                        increment: Number(paymentInformation.amount)
+                        increment: ammount
                     }
                 }
             }),
@@ -45,14 +54,15 @@ export const hdfcWebhookController = async (req: Request, res: Response) => {
         })
 
     } catch(error: any) {
-        if(error instanceof Prisma.PrismaClientKnownRequestError){
+        if(error instanceof Prisma.PrismaClientKnownRequestError || Prisma.PrismaClientValidationError){
             res.status(411).json({
                 error: error.message
             });
         } else {
             console.error(error);
             res.status(411).json({
-                message: "Error while processing webhook"
+                message: "Error while processing webhook",
+                details: error
             })
         }
     } finally {
