@@ -10,10 +10,16 @@
     "@prisma/client": "^5.20.0"
   },
   "devDependencies": {
-    "prisma": "^5.20.0"
+    "@types/node": "^22.7.4",
+    "prisma": "^5.20.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
   },
   "exports": {
     "./client": "./src/index.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "author": "Muzaffar Shaikh",
   "license": "ISC"
